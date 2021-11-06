@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import './home.dart';
-import 'dart:convert';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
 void main() {
@@ -23,27 +21,19 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     idController.addListener(submitData);
-    Navigator.push;
     super.initState();
   }
 
   void submitData() {
     setState(() {
       final String enteredID = idController.text;
-      channel.sink.add('{"type": "sign_in","data":{"name": "$enteredID"}}');
-      if (enteredID.isEmpty) {
-        _isOff = true;
-      } else {
+      if (enteredID.isNotEmpty) {
+        channel.sink.add('{"type": "sign_in","data":{"name": "$enteredID"}}');
         _isOff = false;
+      } else {
+        _isOff = true;
       }
     });
-  }
-
-  @override
-  void dispose() {
-    idController.dispose();
-    // channel.sink.close();
-    super.dispose();
   }
 
   @override
@@ -53,28 +43,28 @@ class _MyAppState extends State<MyApp> {
           body: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 100.0),
-            child: Text('Username'),
+            margin: const EdgeInsets.only(top: 100.0),
+            child: const Text('Username'),
           ),
           Container(
-            padding: EdgeInsets.all(50),
+            padding: const EdgeInsets.all(50),
             child: TextField(
               controller: idController,
               onSubmitted: (_) => submitData,
             ),
           ),
-          StreamBuilder(
-              stream: channel.stream,
-              builder: (context, snapshot) {
-                return Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(snapshot.hasData ? '${snapshot.data}' : ''),
-                );
-              }),
+          // StreamBuilder(
+          //     stream: channel.stream,
+          //     builder: (context, snapshot) {
+          //       return Padding(
+          //         padding: const EdgeInsets.all(20.0),
+          //         child: Text(snapshot.hasData ? '${snapshot.data}' : ''),
+          //       );
+          //     }),
           Container(
             alignment: AlignmentDirectional.bottomCenter,
             child: ElevatedButton(
-              child: Text('Enter!'),
+              child: const Text('Enter!'),
               onPressed: !_isOff
                   ? () {
                       Navigator.push(
@@ -89,5 +79,12 @@ class _MyAppState extends State<MyApp> {
         ],
       )),
     );
+  }
+
+  @override
+  void dispose() {
+    // idController.dispose();
+    channel.sink.close();
+    super.dispose();
   }
 }
