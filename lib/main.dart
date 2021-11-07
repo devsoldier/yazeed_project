@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './home.dart';
+import 'allposts/home.dart';
 import 'package:web_socket_channel/io.dart';
 
 void main() {
