@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
-import 'dart:convert';
-import 'allposts/home.dart';
 
 class userpost extends StatefulWidget {
   @override
