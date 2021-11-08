@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     idController.dispose();
-    //channel.sink.close();
+    channel.sink.close();
     super.dispose();
   }
 }

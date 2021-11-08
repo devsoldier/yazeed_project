@@ -17,6 +17,7 @@ class _homeState extends State<home> {
   // List<bool> likedList = [];
   List posts = [];
   List favPost = [];
+  List alluser = [];
   int currentPosts = 15;
   final _scrollController = ScrollController();
 
@@ -27,8 +28,6 @@ class _homeState extends State<home> {
     channel.sink.add(
         '{"type": "get_posts","data": {"limit": "${currentPosts.toString()}"}}');
   }
-
-  List alluser = [];
 
   void _runFilter(String enteredKeyword) {
     List results = [];
@@ -80,12 +79,13 @@ class _homeState extends State<home> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         currentPosts = currentPosts + 10;
-      } else if (_scrollController.position.pixels ==
-          _scrollController.position.minScrollExtent) {
-        channel.sink.add(
-            '{"type": "get_posts","data": {"limit": "${currentPosts.toString()}"}}');
+        // } else if (_scrollController.position.pixels ==
+        //     _scrollController.position.minScrollExtent) {
+        //   channel.sink.add(
+        //       '{"type": "get_posts","data": {"limit": "${currentPosts.toString()}"}}');
+        // }
+        setState(() {});
       }
-      setState(() {});
     });
     listenStream();
     getpost();
@@ -139,9 +139,7 @@ class _homeState extends State<home> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => favorite(
-                                favoritePost: posts
-                                    .where((p) => favPost.contains(p['_id']))
-                                    .toList(),
+                                favoritePost: favPost,
                                 onUnfavourite: onUnfavourite,
                               ),
                             ),
@@ -161,7 +159,7 @@ class _homeState extends State<home> {
             Container(
               margin: EdgeInsets.only(top: 20),
               child: SizedBox(
-                height: 550,
+                height: 450,
                 width: 400,
                 child: Center(
                   child: posts.isNotEmpty
@@ -171,9 +169,7 @@ class _homeState extends State<home> {
                           shrinkWrap: true,
                           itemCount: posts.length == 0 ? 0 : currentPosts,
                           itemBuilder: (context, index) {
-                            bool isFavorited =
-                                favPost.contains(posts[index]['_id']);
-
+                            bool isFavorited = favPost.contains(posts[index]);
                             return AnimatedContainer(
                               duration: const Duration(seconds: 1),
                               child: Material(
@@ -184,20 +180,17 @@ class _homeState extends State<home> {
                                         MaterialPageRoute(
                                           builder: (context) => postdetails(
                                             data: posts[index],
-                                            //onUnfavorite:onUnfavourite,
-                                            //onFavorite:onFavorite,
-                                            //favPost:favPost),
                                           ),
                                         ));
                                   },
                                   highlightColor: Colors.yellow,
                                   splashColor: Colors.red,
                                   child: Card(
-                                    child: Row(
+                                    child: Column(
                                       children: <Widget>[
                                         Container(
-                                          width: 60,
-                                          height: 60,
+                                          width: 300,
+                                          height: 300,
                                           child: Center(
                                             child: Image.network(
                                               "${posts[index]["image"]}",
@@ -205,40 +198,38 @@ class _homeState extends State<home> {
                                             ),
                                           ),
                                         ),
-                                        Expanded(
-                                            child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Row(
                                           children: <Widget>[
-                                            Text(
-                                              posts[index]["author"],
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.fromLTRB(
-                                                        0, 10, 0, 10),
-                                                child: Text(
-                                                  posts[index]["date"],
+                                            Expanded(
+                                                child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  posts[index]["author"],
                                                   style: const TextStyle(
-                                                      fontSize: 12),
-                                                )),
-                                            Text(
-                                                "${posts[index]["description"]}")
-                                          ],
-                                        )),
-                                        Column(
-                                          children: <Widget>[
+                                                      fontSize: 16),
+                                                ),
+                                                Container(
+                                                    margin: const EdgeInsets
+                                                        .fromLTRB(0, 10, 0, 10),
+                                                    child: Text(
+                                                      posts[index]["date"],
+                                                      style: const TextStyle(
+                                                          fontSize: 12),
+                                                    )),
+                                                Text(
+                                                    "${posts[index]["description"]}"),
+                                              ],
+                                            )),
                                             IconButton(
                                               onPressed: () {
                                                 setState(() {
                                                   if (isFavorited) {
-                                                    favPost.remove(
-                                                        posts[index]['_id']);
+                                                    favPost
+                                                        .remove(posts[index]);
                                                   } else {
-                                                    favPost.add(
-                                                        posts[index]['_id']);
+                                                    favPost.add(posts[index]);
                                                   }
                                                 });
                                               },
@@ -249,9 +240,9 @@ class _homeState extends State<home> {
                                                   color: isFavorited
                                                       ? Colors.pink
                                                       : null),
-                                            ),
+                                            )
                                           ],
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ),
