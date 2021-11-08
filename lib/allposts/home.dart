@@ -1,4 +1,3 @@
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:yazeed_project/allposts/postdetail.dart';
@@ -101,160 +100,155 @@ class _homeState extends State<home> {
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 50, left: 30),
-                    child: IconButton(
-                      iconSize: 30,
-                      onPressed: () {},
-                      icon: Icon(Icons.settings),
-                      color: Colors.grey[700],
+        backgroundColor: Colors.deepPurpleAccent[100],
+        appBar: AppBar(
+            backgroundColor: Colors.deepPurpleAccent[700],
+            title: Text('DollarStore Insta')),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      child: TextField(
+                        onChanged: (value) => _runFilter(value),
+                        decoration: InputDecoration(hintText: 'Search'),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 160),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.black)),
-                    margin: EdgeInsets.only(top: 50, left: 30),
-                    child: IconButton(
+                    Container(
+                        child: IconButton(
                       iconSize: 30,
-                      onPressed: () {},
-                      icon: Icon(Icons.sort),
-                      color: Colors.black,
-                    ),
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                          //borderRadius: BorderRadius(50),
-                          border: Border.all(width: 2, color: Colors.black)),
-                      margin: EdgeInsets.only(top: 50, left: 30),
-                      child: IconButton(
-                        iconSize: 30,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => favorite(
-                                favoritePost: favPost,
-                                onUnfavourite: onUnfavourite,
-                              ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => favorite(
+                              favoritePost: favPost,
+                              onUnfavourite: onUnfavourite,
                             ),
-                          );
-                        },
-                        icon: Icon(Icons.favorite),
-                        color: Colors.red[400],
-                      )),
-                ],
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.favorite),
+                      color: Colors.red[400],
+                    )),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              child: TextField(
-                  onChanged: (value) => _runFilter(value),
-                  decoration: InputDecoration(hintText: 'Search')),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 20),
-              child: SizedBox(
-                height: 450,
-                width: 400,
-                child: Center(
-                  child: posts.isNotEmpty
-                      ? ListView.builder(
-                          controller: _scrollController,
-                          physics: BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: posts.length == 0 ? 0 : currentPosts,
-                          itemBuilder: (context, index) {
-                            bool isFavorited = favPost.contains(posts[index]);
-                            return AnimatedContainer(
-                              duration: const Duration(seconds: 1),
-                              child: Material(
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => postdetails(
-                                            data: posts[index],
-                                          ),
-                                        ));
-                                  },
-                                  highlightColor: Colors.yellow,
-                                  splashColor: Colors.red,
-                                  child: Card(
-                                    child: Column(
-                                      children: <Widget>[
-                                        Container(
-                                          width: 300,
-                                          height: 300,
-                                          child: Center(
-                                            child: Image.network(
-                                              "${posts[index]["image"]}",
-                                              fit: BoxFit.fill,
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: SizedBox(
+                  height: 525,
+                  width: 400,
+                  child: Center(
+                    child: posts.isNotEmpty
+                        ? ListView.builder(
+                            controller: _scrollController,
+                            physics: BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: posts.length == 0 ? 0 : currentPosts,
+                            itemBuilder: (context, index) {
+                              bool isFavorited = favPost.contains(posts[index]);
+                              return AnimatedContainer(
+                                duration: const Duration(seconds: 1),
+                                child: Material(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => postdetails(
+                                              data: posts[index],
+                                            ),
+                                          ));
+                                    },
+                                    highlightColor: Colors.yellow,
+                                    splashColor: Colors.red,
+                                    child: Card(
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            width: 300,
+                                            height: 300,
+                                            child: Center(
+                                              child: Image.network(
+                                                "${posts[index]["image"]}",
+                                                fit: BoxFit.fill,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                                child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  posts[index]["author"],
-                                                  style: const TextStyle(
-                                                      fontSize: 16),
+                                          Row(
+                                            children: <Widget>[
+                                              Container(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 35),
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (isFavorited) {
+                                                        favPost.remove(
+                                                            posts[index]);
+                                                      } else {
+                                                        favPost
+                                                            .add(posts[index]);
+                                                      }
+                                                    });
+                                                  },
+                                                  icon: Icon(
+                                                      isFavorited
+                                                          ? Icons.favorite
+                                                          : Icons
+                                                              .favorite_border,
+                                                      color: isFavorited
+                                                          ? Colors.pink
+                                                          : null),
                                                 ),
-                                                Container(
-                                                    margin: const EdgeInsets
-                                                        .fromLTRB(0, 10, 0, 10),
-                                                    child: Text(
-                                                      posts[index]["date"],
+                                              ),
+                                              Expanded(
+                                                  child: Container(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      posts[index]["author"],
                                                       style: const TextStyle(
-                                                          fontSize: 12),
-                                                    )),
-                                                Text(
-                                                    "${posts[index]["description"]}"),
-                                              ],
-                                            )),
-                                            IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  if (isFavorited) {
-                                                    favPost
-                                                        .remove(posts[index]);
-                                                  } else {
-                                                    favPost.add(posts[index]);
-                                                  }
-                                                });
-                                              },
-                                              icon: Icon(
-                                                  isFavorited
-                                                      ? Icons.favorite
-                                                      : Icons.favorite_border,
-                                                  color: isFavorited
-                                                      ? Colors.pink
-                                                      : null),
-                                            )
-                                          ],
-                                        ),
-                                      ],
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                        "${posts[index]["description"]}"),
+                                                    Container(
+                                                        margin: const EdgeInsets
+                                                                .fromLTRB(
+                                                            0, 5, 0, 5),
+                                                        child: Text(
+                                                          posts[index]["date"],
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 12),
+                                                        )),
+                                                  ],
+                                                ),
+                                              )),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          })
-                      : Text('deez nuts'),
+                              );
+                            })
+                        : Text('deez nuts'),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
