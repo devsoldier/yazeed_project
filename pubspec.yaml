@@ -30,6 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
   web_socket_channel: ^2.1.0
+  favorite_button: ^0.0.4
+  shared_preferences: ^2.0.8
 
 
 

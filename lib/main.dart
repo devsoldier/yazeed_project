@@ -53,14 +53,6 @@ class _MyAppState extends State<MyApp> {
               onSubmitted: (_) => submitData,
             ),
           ),
-          // StreamBuilder(
-          //     stream: channel.stream,
-          //     builder: (context, snapshot) {
-          //       return Padding(
-          //         padding: const EdgeInsets.all(20.0),
-          //         child: Text(snapshot.hasData ? '${snapshot.data}' : ''),
-          //       );
-          //     }),
           Container(
             alignment: AlignmentDirectional.bottomCenter,
             child: ElevatedButton(
@@ -82,8 +74,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    // idController.dispose();
-    channel.sink.close();
+    idController.dispose();
+    //channel.sink.close();
     super.dispose();
   }
 }
